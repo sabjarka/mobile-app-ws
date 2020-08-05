@@ -1,6 +1,6 @@
 package com.appsdeveloperblog.app.ws.mobileappws.service.impl;
 
-import com.appsdeveloperblog.app.ws.mobileappws.UserRepository;
+import com.appsdeveloperblog.app.ws.mobileappws.io.repositories.UserRepository;
 import com.appsdeveloperblog.app.ws.mobileappws.service.UserService;
 import com.appsdeveloperblog.app.ws.mobileappws.shared.UserDto;
 import com.appsdeveloperblog.app.ws.mobileappws.shared.Utils;
@@ -58,5 +58,16 @@ public class UserServiceImpl implements UserService {
         if(userEntity == null) throw new UsernameNotFoundException(email);
 
         return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
+    }
+
+    @Override
+    public UserDto getUser(String email) {
+        UserEntity userEntity = userRepository.findByEmail(email);
+
+        if(userEntity == null) throw new UsernameNotFoundException(email);
+
+        UserDto returnValue = new UserDto();
+        BeanUtils.copyProperties(userEntity, returnValue);
+        return returnValue;
     }
 }
